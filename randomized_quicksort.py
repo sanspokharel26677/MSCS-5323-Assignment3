@@ -1,3 +1,29 @@
+"""
+This Python program implements the Randomized Quicksort algorithm, which is a variation
+of the traditional Quicksort. The key difference is that the pivot element is chosen 
+randomly for each partitioning step, rather than using a fixed position (like the first 
+or last element). This randomization helps to avoid worst-case scenarios in cases where 
+the input data may be already sorted or structured in an unfavorable way for traditional 
+Quicksort.
+
+The program consists of three main functions:
+1. randomized_partition: Chooses a random pivot and rearranges the array such that all 
+   elements smaller than or equal to the pivot are on its left, and all greater elements 
+   are on its right.
+   
+2. partition: Standard partition logic used in Quicksort, where the last element is 
+   chosen as the pivot and the array is partitioned around it.
+   
+3. randomized_quicksort: The recursive function that repeatedly applies the 
+   randomized_partition to sort the array. It sorts the subarrays to the left and right 
+   of the pivot until the entire array is sorted.
+   
+This randomized approach improves the average-case performance to O(n log n) and ensures 
+better results on inputs that might cause deterministic Quicksort to degrade to O(n^2).
+"""
+
+
+
 import random 
 
 # Function to partition the array around a randomly selected pivot
