@@ -6,7 +6,7 @@ or last element). This randomization helps to avoid worst-case scenarios in case
 the input data may be already sorted or structured in an unfavorable way for traditional 
 Quicksort.
 
-The program consists of three main functions:
+The program consists of these main functions:
 1. randomized_partition: Chooses a random pivot and rearranges the array such that all 
    elements smaller than or equal to the pivot are on its left, and all greater elements 
    are on its right.
@@ -25,6 +25,7 @@ better results on inputs that might cause deterministic Quicksort to degrade to 
 
 
 import random 
+import time  # Import time module to measure execution time
 
 # Function to partition the array around a randomly selected pivot
 def randomized_partition(arr, low, high):
@@ -56,4 +57,39 @@ def randomized_quicksort(arr, low, high):
         # Recursively applying Quicksort to the left and right of the pivot
         randomized_quicksort(arr, low, pi - 1)  # Sorting elements before the pivot
         randomized_quicksort(arr, pi + 1, high)  # Sorting elements after the pivot
+        
+# Function to measure and print the time taken to sort the array
+def measure_sorting_time(arr, description):
+    # Create a copy of the array to avoid modifying the original
+    arr_copy = arr.copy()
+    # Record the start time
+    start_time = time.time()
+    # Perform the sorting
+    randomized_quicksort(arr_copy, 0, len(arr_copy) - 1)
+    # Record the end time
+    end_time = time.time()
+    # Calculate and print the time taken
+    time_taken = end_time - start_time
+    print(f"Time taken to sort {description}: {time_taken:.6f} seconds")
+
+
+
+# List of test arrays for various edge cases
+test_arrays = {
+    "Empty Array": [],
+    "Repeated Elements": [5, 3, 8, 3, 9, 5, 3, 3, 8, 1],
+    "Already Sorted": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "Reverse Sorted": [10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+    "Single Element": [42],
+    "All Elements Same": [7, 7, 7, 7, 7, 7, 7, 7]
+}
+
+# Run randomized_quicksort on each test array
+for description, arr in test_arrays.items():
+    randomized_quicksort(arr, 0, len(arr) - 1)
+    print(f"Sorted {description}: {arr}")
+
+# Run randomized_quicksort on each test array and measure time
+for description, arr in test_arrays.items():
+    measure_sorting_time(arr, description)
 
