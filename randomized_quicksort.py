@@ -28,7 +28,7 @@ import random
 import time  # Import time module to measure execution time
 import numpy as np  # Import numpy for generating random test arrays
 import sys
-sys.setrecursionlimit(20000)  # Increase the recursion limit
+sys.setrecursionlimit(20000)  # Increase the recursion limit for testing very large sized
 
 
 # Function to partition the array around a randomly selected pivot
