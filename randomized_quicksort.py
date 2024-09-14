@@ -26,6 +26,10 @@ better results on inputs that might cause deterministic Quicksort to degrade to 
 
 import random 
 import time  # Import time module to measure execution time
+import numpy as np  # Import numpy for generating random test arrays
+import sys
+sys.setrecursionlimit(20000)  # Increase the recursion limit
+
 
 # Function to partition the array around a randomly selected pivot
 def randomized_partition(arr, low, high):
@@ -92,4 +96,79 @@ for description, arr in test_arrays.items():
 # Run randomized_quicksort on each test array and measure time
 for description, arr in test_arrays.items():
     measure_sorting_time(arr, description)
+    
+#-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+# --- Deterministic Quicksort Implementation ---
+def deterministic_partition(arr, low, high):
+    # Partitioning using the first element as the pivot
+    pivot = arr[low]
+    i = low + 1
+    for j in range(low + 1, high + 1):
+        if arr[j] < pivot:
+            arr[i], arr[j] = arr[j], arr[i]
+            i += 1
+    arr[low], arr[i - 1] = arr[i - 1], arr[low]
+    return i - 1
+
+def deterministic_quicksort(arr, low, high):
+    # Main recursive Deterministic Quicksort function
+    if low < high:
+        pi = deterministic_partition(arr, low, high)
+        deterministic_quicksort(arr, low, pi - 1)
+        deterministic_quicksort(arr, pi + 1, high)
+
+# --- Function to Generate Test Arrays ---
+def generate_test_arrays(size):
+    """
+    Generates test arrays of different types for the empirical comparison:
+    - Randomly generated arrays
+    - Already sorted arrays
+    - Reverse sorted arrays
+    - Arrays with repeated elements
+    """
+    return {
+        "Random Array": np.random.randint(0, 1000, size).tolist(),
+        "Already Sorted": list(range(size)),
+        "Reverse Sorted": list(range(size, 0, -1)),
+        "Repeated Elements": [5] * size
+    }
+
+# --- Function to Measure Sorting Time ---
+def measure_sorting_time(sorting_func, arr):
+    """
+    Measures the time taken to sort an array using the specified sorting function.
+    """
+    start_time = time.perf_counter()
+    sorting_func(arr, 0, len(arr) - 1)  # Perform the sorting
+    end_time = time.perf_counter()
+    return end_time - start_time
+
+# --- Empirical Comparison ---
+def empirical_comparison():
+    # Define the sizes of arrays to test
+    sizes = [100, 1000, 5000]
+
+    # Iterate over each size to perform the comparison
+    for size in sizes:
+        print(f"\nArray Size: {size}")
+        test_arrays = generate_test_arrays(size)  # Generate test arrays
+        for description, arr in test_arrays.items():
+            # Copy arrays to preserve original for each test
+            arr_randomized = arr.copy()
+            arr_deterministic = arr.copy()
+
+            # Time Randomized Quicksort
+            time_randomized = measure_sorting_time(randomized_quicksort, arr_randomized)
+
+            # Time Deterministic Quicksort
+            time_deterministic = measure_sorting_time(deterministic_quicksort, arr_deterministic)
+
+            # Print the results
+            print(f"{description}: Randomized Quicksort: {time_randomized:.6f} seconds, Deterministic Quicksort: {time_deterministic:.6f} seconds")
+
+# Run the empirical comparison
+if __name__ == "__main__":
+    empirical_comparison()
 
